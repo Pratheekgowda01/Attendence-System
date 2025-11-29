@@ -6,7 +6,7 @@ A full-stack employee attendance tracking system built with React, Node.js, Expr
 
 ### Employee Features
 - ✅ Register/Login
-- ✅ Mark attendance (Check In / Check Out)
+- ✅ Mark attendance (Check In / Check Out) - **Time-restricted check-in (8:00 AM - 10:00 AM)**
 - ✅ View attendance history (calendar or table view)
 - ✅ View monthly summary (Present/Absent/Late days)
 - ✅ Dashboard with stats and quick actions
@@ -173,7 +173,7 @@ A full-stack employee attendance tracking system built with React, Node.js, Expr
 - `GET /api/auth/me` - Get current user (Protected)
 
 ### Attendance (Employee)
-- `POST /api/attendance/checkin` - Check in (Protected)
+- `POST /api/attendance/checkin` - Check in (Protected, **8:00 AM - 10:00 AM only**)
 - `POST /api/attendance/checkout` - Check out (Protected)
 - `GET /api/attendance/my-history` - Get my attendance history (Protected)
 - `GET /api/attendance/my-summary` - Get monthly summary (Protected)
@@ -329,4 +329,3 @@ Contributions, issues, and feature requests are welcome!
 ## Contact
 
 For any queries, please open an issue in the repository.
-
