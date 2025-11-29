@@ -174,9 +174,9 @@ const Reports = () => {
             <h3 className="card-title">Report Data</h3>
             <div className="header-actions">
               <span className="record-count">{reportData.length} records</span>
-              <button onClick={handleExportCSV} className="btn btn-success btn-sm">
+            <button onClick={handleExportCSV} className="btn btn-success btn-sm">
                 📥 Export to CSV
-              </button>
+            </button>
             </div>
           </div>
           <div className="card-body">
@@ -184,27 +184,27 @@ const Reports = () => {
               <LoadingSpinner message="Generating report..." />
             ) : (
               <div className="table-container">
-                <table className="attendance-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Employee ID</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Department</th>
-                      <th>Check In</th>
-                      <th>Check Out</th>
-                      <th>Status</th>
-                      <th>Hours</th>
-                      <th>Remarks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {reportData.map((record) => {
-                      const displayStatus = getDisplayStatus(record.status);
-                      const remarks = getRemarks(record);
-                      return (
-                        <tr key={record._id}>
+              <table className="attendance-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Status</th>
+                    <th>Hours</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reportData.map((record) => {
+                    const displayStatus = getDisplayStatus(record.status);
+                    const remarks = getRemarks(record);
+                    return (
+                      <tr key={record._id}>
                           <td>
                             {new Date(record.date).toLocaleDateString('en-GB', { 
                               day: '2-digit', 
@@ -218,19 +218,19 @@ const Reports = () => {
                           <td>{record.userId.department || 'N/A'}</td>
                           <td>{formatTime(record.checkInTime)}</td>
                           <td>{formatTime(record.checkOutTime)}</td>
-                          <td>
-                            <span className={`status-badge ${displayStatus.toLowerCase()}`}>
+                        <td>
+                          <span className={`status-badge ${displayStatus.toLowerCase()}`}>
                               {displayStatus}
-                            </span>
-                          </td>
+                          </span>
+                        </td>
                           <td className="hours">{(record.totalHours || 0).toFixed(2)}h</td>
                           <td className="remarks">{remarks}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
             )}
           </div>
         </div>

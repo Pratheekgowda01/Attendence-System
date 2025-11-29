@@ -92,19 +92,25 @@
 
 .bar-wrapper {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 2px;
   position: relative;
   min-height: 200px;
+}
+
+.stacked-bar-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
 }
 
 /* Bars */
 .bar {
   width: 100%;
-  position: relative;
-  border-radius: 6px 6px 0 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-radius: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: barGrow 0.6s ease-out forwards;
   opacity: 0;
@@ -114,6 +120,14 @@
   justify-content: center;
   padding-top: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bar-present {
+  border-radius: 6px 6px 0 0;
+}
+
+.bar-absent {
+  border-radius: 0 0 6px 6px;
 }
 
 @keyframes barGrow {

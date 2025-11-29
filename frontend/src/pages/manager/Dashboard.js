@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import AdvancedChart from '../../components/AdvancedChart';
@@ -6,18 +7,42 @@ import '../Dashboard.css';
 import '../../components/Card.css';
 import './ManagerDashboard.css';
 
+// Icon Components
+const UsersIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+    <circle cx="9" cy="7" r="4"></circle>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+);
+
+const XIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <polyline points="12 6 12 12 16 14"></polyline>
+  </svg>
+);
+
 const ManagerDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     fetchDashboardData();
-    // Update time every second
-    const timeInterval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timeInterval);
   }, []);
 
   const fetchDashboardData = async () => {
@@ -42,183 +67,154 @@ const ManagerDashboard = () => {
   const { totalEmployees, todayStats, weeklyTrend, departmentStats, absentToday } = dashboardData;
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-header">
-        <div>
-          <h1>👔 Manager Dashboard</h1>
-          <p className="dashboard-subtitle">Team Overview & Analytics</p>
-        </div>
-        <div className="dashboard-time">
-          <div className="time-display">
-            {currentTime.toLocaleTimeString('en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit'
-            })}
+    <div className="dashboard manager-dashboard">
+      {/* I. Key Performance Indicators (KPIs) */}
+      <div className="kpi-section">
+        <h2 className="section-title">Key Performance Indicators</h2>
+        <div className="kpi-cards-grid">
+          <div className="kpi-card kpi-total">
+            <div className="kpi-icon">
+              <UsersIcon />
+            </div>
+            <div className="kpi-content">
+              <div className="kpi-value">{totalEmployees}</div>
+              <div className="kpi-label">Total Employees</div>
+            </div>
           </div>
-          <div className="date-display-small">
-            {currentTime.toLocaleDateString('en-US', {
-              weekday: 'long',
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric'
-            })}
+          <div className="kpi-card kpi-present">
+            <div className="kpi-icon">
+              <CheckIcon />
+            </div>
+            <div className="kpi-content">
+              <div className="kpi-value">{todayStats.present}</div>
+              <div className="kpi-label">Present Today</div>
+            </div>
+          </div>
+          <div className="kpi-card kpi-absent">
+            <div className="kpi-icon">
+              <XIcon />
+            </div>
+            <div className="kpi-content">
+              <div className="kpi-value">{todayStats.absent}</div>
+              <div className="kpi-label">Absent Today</div>
+            </div>
+          </div>
+          <div className="kpi-card kpi-late">
+            <div className="kpi-icon">
+              <ClockIcon />
+            </div>
+            <div className="kpi-content">
+              <div className="kpi-value">{todayStats.late.length}</div>
+              <div className="kpi-label">Late Arrivals</div>
+            </div>
           </div>
         </div>
       </div>
-      
-      <div className="dashboard-grid">
-        {/* Total Employees Card */}
-        <div className="card stat-card stat-primary">
-          <div className="card-header">
-            <h3 className="card-title">👥 Total Employees</h3>
-          </div>
-          <div className="card-body">
-            <div className="stat-value-large">{totalEmployees}</div>
-            <div className="stat-description">Active team members</div>
-          </div>
-        </div>
 
-        {/* Today's Attendance Card */}
-        <div className="card stat-card stat-success">
-          <div className="card-header">
-            <h3 className="card-title">✅ Present Today</h3>
+      {/* II. Visual Trend Analysis (Charts) */}
+      <div className="charts-section">
+        <h2 className="section-title">Visual Trend Analysis</h2>
+        <div className="charts-grid">
+          {/* Weekly Trend Chart */}
+          <div className="chart-card weekly-trend">
+            <div className="chart-header">
+              <h3 className="chart-title">Weekly Attendance Trend</h3>
+              <p className="chart-subtitle">Average Present Rate (Last 7 Days)</p>
+            </div>
+            <div className="chart-body">
+              <AdvancedChart 
+                data={weeklyTrend} 
+                totalEmployees={totalEmployees}
+                title="Weekly Attendance Trend"
+              />
+            </div>
           </div>
-          <div className="card-body">
-            <div className="stat-value-large">{todayStats.present}</div>
-            <div className="stat-description">Employees checked in</div>
-          </div>
-        </div>
 
-        {/* Absent Today Card */}
-        <div className="card stat-card stat-danger">
-          <div className="card-header">
-            <h3 className="card-title">❌ Absent Today</h3>
-          </div>
-          <div className="card-body">
-            <div className="stat-value-large">{todayStats.absent}</div>
-            <div className="stat-description">Not checked in</div>
-          </div>
-        </div>
-
-        {/* Late Arrivals Card */}
-        <div className="card stat-card stat-warning">
-          <div className="card-header">
-            <h3 className="card-title">⏰ Late Arrivals</h3>
-          </div>
-          <div className="card-body">
-            <div className="stat-value-large">{todayStats.late.length}</div>
-            <div className="stat-description">Arrived after 9:30 AM</div>
-          </div>
-        </div>
-
-        {/* Weekly Trend Chart */}
-        <div className="card chart-card" style={{ gridColumn: '1 / -1' }}>
-          <div className="card-header">
-            <h3 className="card-title">📊 Weekly Attendance Trend (Last 7 Days)</h3>
-          </div>
-          <div className="card-body" style={{ padding: '2rem' }}>
-            <AdvancedChart 
-              data={weeklyTrend} 
-              totalEmployees={totalEmployees}
-              title="Weekly Attendance Trend"
-            />
-          </div>
-        </div>
-
-        {/* Department-wise Stats */}
-        <div className="card dept-card" style={{ gridColumn: '1 / -1' }}>
-          <div className="card-header">
-            <h3 className="card-title">🏢 Department-wise Attendance (This Month)</h3>
-          </div>
-          <div className="card-body">
-            {Object.keys(departmentStats).length === 0 ? (
-              <div className="empty-state">
-                <p>No department data available</p>
-              </div>
-            ) : (
-              <div className="table-container">
-                <table className="attendance-table">
-                  <thead>
-                    <tr>
-                      <th>Department</th>
-                      <th>Present</th>
-                      <th>Late</th>
-                      <th>Absent</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+          {/* Department Breakdown */}
+          <div className="chart-card department-breakdown">
+            <div className="chart-header">
+              <h3 className="chart-title">Department Breakdown</h3>
+              <p className="chart-subtitle">% Present by Department (This Month)</p>
+            </div>
+            <div className="chart-body">
+              {Object.keys(departmentStats).length === 0 ? (
+                <div className="empty-state">
+                  <p>No department data available</p>
+                </div>
+              ) : (
+                <div className="department-chart">
+                  <div className="department-bars">
                     {Object.entries(departmentStats).map(([dept, stats]) => {
                       const total = stats.present + stats.late + stats.absent;
+                      const presentPercent = total > 0 ? (stats.present / total) * 100 : 0;
                       return (
-                        <tr key={dept}>
-                          <td className="dept-name">{dept}</td>
-                          <td className="stat-present">{stats.present}</td>
-                          <td className="stat-late">{stats.late}</td>
-                          <td className="stat-absent">{stats.absent}</td>
-                          <td className="stat-total">{total}</td>
-                        </tr>
+                        <div key={dept} className="department-bar-item">
+                          <div className="dept-bar-header">
+                            <span className="dept-name">{dept}</span>
+                            <span className="dept-percent">{presentPercent.toFixed(1)}%</span>
+                          </div>
+                          <div className="dept-bar-container">
+                            <div 
+                              className="dept-bar-fill" 
+                              style={{ width: `${presentPercent}%` }}
+                            ></div>
+                          </div>
+                          <div className="dept-bar-stats">
+                            <span className="stat-present">Present: {stats.present}</span>
+                            <span className="stat-late">Late: {stats.late}</span>
+                            <span className="stat-absent">Absent: {stats.absent}</span>
+                          </div>
+                        </div>
                       );
                     })}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Late Arrivals Today */}
-        {todayStats.late.length > 0 && (
-          <div className="card late-card">
-            <div className="card-header">
-              <h3 className="card-title">⏰ Late Arrivals Today</h3>
+      {/* III. Actionable Alerts */}
+      <div className="alerts-section">
+        <div className="alerts-header">
+          <h2 className="section-title">Actionable Alerts</h2>
+          <Link to="/manager/reports" className="quick-link-reports">
+            Export Reports →
+          </Link>
+        </div>
+        <div className="alerts-grid">
+          {/* Absent Employees Today */}
+          <div className="alert-card absent-alert">
+            <div className="alert-header">
+              <h3 className="alert-title">❌ Absent Employees Today</h3>
+              <span className="alert-count">{absentToday.length}</span>
             </div>
-            <div className="card-body">
-              <div className="late-list">
-                {todayStats.late.map((record, index) => (
-                  <div key={index} className="late-item">
-                    <div className="late-info">
-                      <div className="late-name">{record.userId.name}</div>
-                      <div className="late-details">
-                        {record.userId.employeeId} • {record.userId.department}
+            <div className="alert-body">
+              {absentToday.length === 0 ? (
+                <div className="empty-alert">
+                  <p>All employees are present today! 🎉</p>
+                </div>
+              ) : (
+                <div className="absent-employees-list">
+                  {absentToday.map((employee, index) => (
+                    <div key={index} className="absent-employee-item">
+                      <div className="employee-avatar">
+                        {employee.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="employee-info">
+                        <div className="employee-name">{employee.name}</div>
+                        <div className="employee-details">
+                          {employee.employeeId} • {employee.department}
+                        </div>
                       </div>
                     </div>
-                    <div className="late-time">
-                      {new Date(record.checkInTime).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        )}
-
-        {/* Absent Employees Today */}
-        {absentToday.length > 0 && (
-          <div className="card absent-card">
-            <div className="card-header">
-              <h3 className="card-title">❌ Absent Employees Today</h3>
-            </div>
-            <div className="card-body">
-              <div className="absent-list">
-                {absentToday.map((employee, index) => (
-                  <div key={index} className="absent-item">
-                    <div className="absent-info">
-                      <div className="absent-name">{employee.name}</div>
-                      <div className="absent-details">
-                        {employee.employeeId} • {employee.department}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

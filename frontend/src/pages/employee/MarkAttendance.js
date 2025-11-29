@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
+import { useAuthStore } from '../../store/authStore';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import Alert from '../../components/Alert';
 import '../../components/Card.css';
@@ -8,6 +9,7 @@ import '../../components/Button.css';
 import './MarkAttendance.css';
 
 const MarkAttendance = () => {
+  const { user } = useAuthStore();
   const [todayStatus, setTodayStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
@@ -40,8 +42,8 @@ const MarkAttendance = () => {
     const hour = currentTime.getHours();
     const minute = currentTime.getMinutes();
     const currentMinutes = hour * 60 + minute;
-    const startMinutes = 8 * 60; // 8:00 AM
-    const endMinutes = 10 * 60; // 10:00 AM
+    const startMinutes = 9 * 60; // 9:00 AM
+    const endMinutes = 18 * 60; // 6:00 PM (18:00)
     return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
   };
 
@@ -49,8 +51,8 @@ const MarkAttendance = () => {
     const hour = currentTime.getHours();
     const minute = currentTime.getMinutes();
     const currentMinutes = hour * 60 + minute;
-    const startMinutes = 8 * 60; // 8:00 AM
-    const endMinutes = 10 * 60; // 10:00 AM
+    const startMinutes = 9 * 60; // 9:00 AM
+    const endMinutes = 18 * 60; // 6:00 PM (18:00)
 
     if (currentMinutes < startMinutes) {
       const minutesUntilStart = startMinutes - currentMinutes;
@@ -58,12 +60,12 @@ const MarkAttendance = () => {
       const mins = minutesUntilStart % 60;
       return {
         allowed: false,
-        message: `Check-in opens in ${hours}h ${mins}m (8:00 AM - 10:00 AM)`
+        message: `Check-in opens in ${hours}h ${mins}m (9:00 AM - 6:00 PM)`
       };
     } else if (currentMinutes > endMinutes) {
       return {
         allowed: false,
-        message: 'Check-in time has passed (8:00 AM - 10:00 AM)'
+        message: 'Check-in time has passed (9:00 AM - 6:00 PM)'
       };
     } else {
       const minutesUntilEnd = endMinutes - currentMinutes;
@@ -80,7 +82,7 @@ const MarkAttendance = () => {
     if (!isWithinCheckInTime()) {
       setAlert({ 
         type: 'error', 
-        message: 'Check-in is only allowed between 8:00 AM and 10:00 AM' 
+        message: 'Check-in is only allowed between 9:00 AM and 6:00 PM' 
       });
       return;
     }
@@ -93,7 +95,12 @@ const MarkAttendance = () => {
         type: 'success', 
         message: `Checked in successfully at ${new Date(response.data.attendance.checkInTime).toLocaleTimeString()}` 
       });
-      fetchTodayStatus();
+      // Refresh status immediately
+      await fetchTodayStatus();
+      // Wait a bit for the backend to fully process, then redirect with refresh flag
+      setTimeout(() => {
+        navigate('/employee/dashboard', { replace: false, state: { refresh: Date.now(), fromCheckIn: true } });
+      }, 1500);
     } catch (error) {
       setAlert({ 
         type: 'error', 
@@ -145,7 +152,24 @@ const MarkAttendance = () => {
 
   return (
     <div className="mark-attendance-container">
-      <h1 className="page-title">⏰ Mark Attendance</h1>
+      <div className="page-header">
+        <div className="header-left">
+          <h1 className="page-title">Mark Attendance</h1>
+          <p className="welcome-message">
+            Hi, <span className="user-name">{user?.name || 'Employee'}</span>! Ready to check in?
+          </p>
+        </div>
+        <div className="header-right">
+          <div className="header-date">
+            {currentTime.toLocaleDateString('en-US', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </div>
+        </div>
+      </div>
       
       {alert && (
         <Alert 
@@ -155,21 +179,16 @@ const MarkAttendance = () => {
         />
       )}
 
-      <div className="card attendance-card">
-        <div className="card-header">
-          <h3 className="card-title">Today's Attendance</h3>
-          <span className="date-display">
-            {new Date().toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </span>
-        </div>
-        <div className="card-body">
-          {/* Live Clock */}
+      <div className="attendance-layout">
+        {/* Live Clock Card */}
+        <div className="card clock-card">
           <div className="live-clock">
+            <div className="clock-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
             <div className="clock-time">
               {currentTime.toLocaleTimeString('en-US', {
                 hour: '2-digit',
@@ -186,84 +205,150 @@ const MarkAttendance = () => {
               })}
             </div>
           </div>
+        </div>
 
-          {/* Check-in Time Status */}
-          {!todayStatus?.checkedIn && (
-            <div className={`time-status ${timeStatus.allowed ? 'allowed' : 'not-allowed'}`}>
-              <div className="time-status-icon">
-                {timeStatus.allowed ? '✓' : '⏰'}
+        {/* Check-in Time Status */}
+        {!todayStatus?.checkedIn && (
+          <div className={`card time-status-card ${timeStatus.allowed ? 'allowed' : 'not-allowed'}`}>
+            <div className="time-status-content">
+              <div className="time-status-icon-wrapper">
+                {timeStatus.allowed ? (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                ) : (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                )}
               </div>
               <div className="time-status-text">
-                <strong>Check-in Window: 8:00 AM - 10:00 AM</strong>
-                <p>{timeStatus.message}</p>
+                <div className="time-status-title">Check-in Window: 9:00 AM - 6:00 PM</div>
+                <div className="time-status-message">{timeStatus.message}</div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Attendance Details Card */}
+        <div className="card details-card">
+          <div className="card-header">
+            <h3 className="card-title">Attendance Details</h3>
+          </div>
+          <div className="card-body">
+            <div className="attendance-details-list">
+              <div className="detail-row-item">
+                <div className="detail-row-label">Date:</div>
+                <div className="detail-row-value">
+                  {new Date().toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </div>
+              </div>
+              <div className="detail-row-item">
+                <div className="detail-row-label">Check In:</div>
+                <div className={`detail-row-value ${todayStatus?.attendance?.checkInTime ? 'has-value' : 'no-value'}`}>
+                  {formatTime(todayStatus?.attendance?.checkInTime)}
+                </div>
+              </div>
+              <div className="detail-row-item">
+                <div className="detail-row-label">Check Out:</div>
+                <div className={`detail-row-value ${todayStatus?.attendance?.checkOutTime ? 'has-value' : 'no-value'}`}>
+                  {formatTime(todayStatus?.attendance?.checkOutTime)}
+                </div>
+              </div>
+              <div className="detail-row-item">
+                <div className="detail-row-label">Status:</div>
+                <div className="detail-row-value">
+                  <span className={`status-badge ${todayStatus?.attendance?.status || 'absent'}`}>
+                    {(todayStatus?.attendance?.status || 'absent').toUpperCase()}
+                  </span>
+                </div>
+              </div>
+              {todayStatus?.attendance?.totalHours && (
+                <div className="detail-row-item">
+                  <div className="detail-row-label">Total Hours:</div>
+                  <div className="detail-row-value has-value">
+                    {todayStatus.attendance.totalHours.toFixed(2)}h
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="action-section">
+          {!todayStatus?.checkedIn && (
+            <button
+              onClick={handleCheckIn}
+              disabled={actionLoading || !canCheckIn}
+              className={`action-btn checkin-btn ${!canCheckIn ? 'disabled' : ''}`}
+              title={!canCheckIn ? 'Check-in is only allowed between 9:00 AM and 6:00 PM' : ''}
+            >
+              {actionLoading ? (
+                <>
+                  <svg className="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  Check In
+                </>
+              )}
+            </button>
+          )}
+          {todayStatus?.checkedIn && !todayStatus?.checkedOut && (
+            <button
+              onClick={handleCheckOut}
+              disabled={actionLoading}
+              className="action-btn checkout-btn"
+            >
+              {actionLoading ? (
+                <>
+                  <svg className="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  Check Out
+                </>
+              )}
+            </button>
+          )}
+          {todayStatus?.checkedOut && (
+            <div className="completed-message">
+              <div className="completed-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <h3>Attendance Completed</h3>
+              <p>You have successfully completed your attendance for today.</p>
+              <button 
+                onClick={() => navigate('/employee/dashboard')} 
+                className="btn btn-secondary"
+              >
+                Go to Dashboard
+              </button>
             </div>
           )}
-
-          {/* Attendance Details */}
-          <div className="attendance-details">
-            <div className="detail-row">
-              <span className="detail-label">Check In Time:</span>
-              <span className="detail-value">
-                {formatTime(todayStatus?.attendance?.checkInTime)}
-              </span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Check Out Time:</span>
-              <span className="detail-value">
-                {formatTime(todayStatus?.attendance?.checkOutTime)}
-              </span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-label">Status:</span>
-              <span className={`status-badge ${todayStatus?.attendance?.status || 'absent'}`}>
-                {(todayStatus?.attendance?.status || 'absent').toUpperCase()}
-              </span>
-            </div>
-            {todayStatus?.attendance?.totalHours && (
-              <div className="detail-row">
-                <span className="detail-label">Total Hours:</span>
-                <span className="detail-value">
-                  {todayStatus.attendance.totalHours.toFixed(2)}h
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="action-buttons">
-            {!todayStatus?.checkedIn && (
-              <button
-                onClick={handleCheckIn}
-                disabled={actionLoading || !canCheckIn}
-                className={`btn btn-success btn-lg ${!canCheckIn ? 'disabled' : ''}`}
-                title={!canCheckIn ? 'Check-in is only allowed between 8:00 AM and 10:00 AM' : ''}
-              >
-                {actionLoading ? 'Processing...' : 'Check In'}
-              </button>
-            )}
-            {todayStatus?.checkedIn && !todayStatus?.checkedOut && (
-              <button
-                onClick={handleCheckOut}
-                disabled={actionLoading}
-                className="btn btn-danger btn-lg"
-              >
-                {actionLoading ? 'Processing...' : 'Check Out'}
-              </button>
-            )}
-            {todayStatus?.checkedOut && (
-              <div className="completed-message">
-                <div className="completed-icon">✓</div>
-                <p>You have already completed attendance for today.</p>
-                <button 
-                  onClick={() => navigate('/employee/dashboard')} 
-                  className="btn btn-secondary"
-                >
-                  Go to Dashboard
-                </button>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>

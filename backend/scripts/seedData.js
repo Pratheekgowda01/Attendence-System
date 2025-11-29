@@ -73,6 +73,14 @@ const seedData = async () => {
         role: 'employee',
         employeeId: 'EMP005',
         department: 'Sales'
+      },
+      {
+        name: 'Frank Miller',
+        email: 'frank@company.com',
+        password: 'employee123',
+        role: 'employee',
+        employeeId: 'EMP006',
+        department: 'Engineering'
       }
     ];
 

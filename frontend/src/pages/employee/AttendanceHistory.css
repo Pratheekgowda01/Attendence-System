@@ -1,7 +1,6 @@
 .attendance-history-container {
   padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .page-title {
@@ -28,15 +27,18 @@
 
 .summary-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem;
 }
 
 .summary-stat {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   padding: 1.5rem;
   border-radius: 12px;
   transition: transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .summary-stat:hover {
@@ -68,11 +70,37 @@
   border: 2px solid rgba(59, 130, 246, 0.2);
 }
 
+.summary-stat .stat-icon-large {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  color: #1f2937;
+}
+
+.summary-stat .stat-icon-large svg {
+  width: 28px;
+  height: 28px;
+  color: inherit;
+}
+
+.summary-stat .stat-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .summary-stat .stat-value {
   font-size: 2rem;
   font-weight: 800;
   color: #1f2937;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
 }
 
 .summary-stat .stat-label {
@@ -285,6 +313,15 @@
 
   .summary-stats {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .summary-stat {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .summary-stat .stat-icon-large {
+    margin: 0 auto;
   }
 
   .control-group {

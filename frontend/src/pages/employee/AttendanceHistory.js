@@ -7,6 +7,53 @@ import '../../components/Card.css';
 import '../History.css';
 import './AttendanceHistory.css';
 
+// Icon Components
+const CheckIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+);
+
+const XIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <polyline points="12 6 12 12 16 14"></polyline>
+  </svg>
+);
+
+const HalfDayIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="2" x2="12" y2="6"></line>
+    <line x1="12" y1="18" x2="12" y2="22"></line>
+    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+    <line x1="2" y1="12" x2="6" y2="12"></line>
+    <line x1="18" y1="12" x2="22" y2="12"></line>
+    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+  </svg>
+);
+
+const StopwatchIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2v4"></path>
+    <path d="M12 18v4"></path>
+    <path d="M8 6h8"></path>
+    <path d="M8 18h8"></path>
+    <path d="M8 6c0 2 1.5 4 4 4s4-2 4-4"></path>
+    <path d="M8 18c0-2 1.5-4 4-4s4 2 4 4"></path>
+    <line x1="12" y1="10" x2="12" y2="14"></line>
+  </svg>
+);
+
 const AttendanceHistory = () => {
   const [attendance, setAttendance] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -114,24 +161,49 @@ const AttendanceHistory = () => {
           <div className="card-body">
             <div className="summary-stats">
               <div className="summary-stat stat-present">
-                <div className="stat-value">{summary.present}</div>
-                <div className="stat-label">Present</div>
+                <div className="stat-icon-large">
+                  <CheckIcon />
+                </div>
+                <div className="stat-content">
+                  <div className="stat-value">{summary.present}</div>
+                  <div className="stat-label">Present</div>
+                </div>
               </div>
               <div className="summary-stat stat-absent">
-                <div className="stat-value">{summary.absent}</div>
-                <div className="stat-label">Absent</div>
+                <div className="stat-icon-large">
+                  <XIcon />
+                </div>
+                <div className="stat-content">
+                  <div className="stat-value">{summary.absent}</div>
+                  <div className="stat-label">Absent</div>
+                </div>
               </div>
               <div className="summary-stat stat-late">
-                <div className="stat-value">{summary.late}</div>
-                <div className="stat-label">Late</div>
+                <div className="stat-icon-large">
+                  <ClockIcon />
+                </div>
+                <div className="stat-content">
+                  <div className="stat-value">{summary.late}</div>
+                  <div className="stat-label">Late</div>
+                </div>
               </div>
               <div className="summary-stat stat-halfday">
-                <div className="stat-value">{summary.halfDay || 0}</div>
-                <div className="stat-label">Half Day</div>
+                <div className="stat-icon-large">
+                  <HalfDayIcon />
+                </div>
+                <div className="stat-content">
+                  <div className="stat-value">{summary.halfDay || 0}</div>
+                  <div className="stat-label">Half Day</div>
+                </div>
               </div>
               <div className="summary-stat stat-hours">
-                <div className="stat-value">{summary.totalHours.toFixed(1)}h</div>
-                <div className="stat-label">Total Hours</div>
+                <div className="stat-icon-large">
+                  <StopwatchIcon />
+                </div>
+                <div className="stat-content">
+                  <div className="stat-value">{summary.totalHours.toFixed(1)}h</div>
+                  <div className="stat-label">Total Hours</div>
+                </div>
               </div>
             </div>
           </div>
@@ -147,24 +219,24 @@ const AttendanceHistory = () => {
           <div className="card-body">
             <div className="calendar-controls">
               <div className="control-group">
-                <label>
-                  Month:
+              <label>
+                Month:
                   <select value={month} onChange={handleMonthChange} className="select-control">
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                       <option key={m} value={m}>
                         {new Date(2000, m - 1).toLocaleString('default', { month: 'long' })}
                       </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Year:
+                  ))}
+                </select>
+              </label>
+              <label>
+                Year:
                   <select value={year} onChange={handleYearChange} className="select-control">
-                    {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i).map(y => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                </label>
+                  {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i).map(y => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </label>
               </div>
             </div>
             
@@ -212,27 +284,27 @@ const AttendanceHistory = () => {
                     <span className="detail-label">Date:</span>
                     <span className="detail-value">
                       {new Date(selectedRecord.date).toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
                     </span>
-                  </div>
+                </div>
                   <div className="detail-item">
                     <span className="detail-label">Check In:</span>
                     <span className="detail-value">{formatTime(selectedRecord.checkInTime)}</span>
-                  </div>
+                </div>
                   <div className="detail-item">
                     <span className="detail-label">Check Out:</span>
                     <span className="detail-value">{formatTime(selectedRecord.checkOutTime)}</span>
-                  </div>
+                </div>
                   <div className="detail-item">
                     <span className="detail-label">Status:</span>
-                    <span className={`status-badge ${selectedRecord.status}`}>
-                      {selectedRecord.status.toUpperCase()}
-                    </span>
-                  </div>
+                  <span className={`status-badge ${selectedRecord.status}`}>
+                    {selectedRecord.status.toUpperCase()}
+                  </span>
+                </div>
                   <div className="detail-item">
                     <span className="detail-label">Total Hours:</span>
                     <span className="detail-value">
@@ -264,18 +336,18 @@ const AttendanceHistory = () => {
             </div>
           ) : (
             <div className="table-container">
-              <table className="attendance-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Check In</th>
-                    <th>Check Out</th>
-                    <th>Status</th>
-                    <th>Hours</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {attendance.map((record) => (
+            <table className="attendance-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Check In</th>
+                  <th>Check Out</th>
+                  <th>Status</th>
+                  <th>Hours</th>
+                </tr>
+              </thead>
+              <tbody>
+                {attendance.map((record) => (
                     <tr 
                       key={record._id} 
                       onClick={() => handleDateChange(new Date(record.date))} 
@@ -288,18 +360,18 @@ const AttendanceHistory = () => {
                           year: 'numeric'
                         })}
                       </td>
-                      <td>{formatTime(record.checkInTime)}</td>
-                      <td>{formatTime(record.checkOutTime)}</td>
-                      <td>
-                        <span className={`status-badge ${record.status}`}>
-                          {record.status}
-                        </span>
-                      </td>
+                    <td>{formatTime(record.checkInTime)}</td>
+                    <td>{formatTime(record.checkOutTime)}</td>
+                    <td>
+                      <span className={`status-badge ${record.status}`}>
+                        {record.status}
+                      </span>
+                    </td>
                       <td>{record.totalHours ? `${record.totalHours.toFixed(1)}h` : 'N/A'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
             </div>
           )}
         </div>

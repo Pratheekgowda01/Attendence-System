@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import Logo from '../components/Logo';
 import Alert from '../components/Alert';
 import './Auth.css';
 
@@ -40,21 +39,26 @@ const Login = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
-          <Logo size="large" />
+        {/* AttendPro Logo */}
+        <div className="auth-logo">
+          <div className="attendpro-logo">
+            <span className="logo-icon">✓</span>
+            <span className="logo-text">AttendPro</span>
+          </div>
         </div>
+
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
           {error && <Alert type="error" message={error} />}
           
           <div className="form-group">
-            <label>Email</label>
+            <label>Email / Employee ID</label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Enter your email"
+              placeholder="Enter your email or employee ID"
               disabled={loading}
             />
           </div>
@@ -71,7 +75,7 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+          <button type="submit" className="btn btn-primary btn-block btn-login" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>

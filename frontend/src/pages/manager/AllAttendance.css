@@ -1,7 +1,6 @@
 .all-attendance-container {
   padding: 2rem;
-  max-width: 1600px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .page-title {

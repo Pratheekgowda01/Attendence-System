@@ -81,37 +81,42 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
                       height: `${chartHeight - chartPadding.top - chartPadding.bottom}px`
                     }}
                   >
-                    {/* Present Bar */}
-                    {presentHeight > 0 && (
-                      <div
-                        className={`bar bar-present ${isHovered ? 'bar-hovered' : ''}`}
-                        style={{
-                          height: `${presentHeight}px`,
-                          animationDelay: `${index * 0.1}s`
-                        }}
-                        title={`Present: ${day.present}`}
-                      >
-                        {isHovered && (
-                          <div className="bar-value">{day.present}</div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Absent Bar */}
-                    {absentHeight > 0 && (
-                      <div
-                        className={`bar bar-absent ${isHovered ? 'bar-hovered' : ''}`}
-                        style={{
-                          height: `${absentHeight}px`,
-                          animationDelay: `${index * 0.1 + 0.05}s`
-                        }}
-                        title={`Absent: ${day.absent}`}
-                      >
-                        {isHovered && (
-                          <div className="bar-value">{day.absent}</div>
-                        )}
-                      </div>
-                    )}
+                    {/* Stacked Bar - Absent at bottom, Present on top */}
+                    <div className="stacked-bar-container">
+                      {/* Absent Bar (Bottom) */}
+                      {absentHeight > 0 && (
+                        <div
+                          className={`bar bar-absent ${isHovered ? 'bar-hovered' : ''}`}
+                          style={{
+                            height: `${absentHeight}px`,
+                            animationDelay: `${index * 0.1 + 0.05}s`,
+                            bottom: 0
+                          }}
+                          title={`Absent: ${day.absent}`}
+                        >
+                          {isHovered && absentHeight > 15 && (
+                            <div className="bar-value">{day.absent}</div>
+                          )}
+                        </div>
+                      )}
+                      
+                      {/* Present Bar (Top) */}
+                      {presentHeight > 0 && (
+                        <div
+                          className={`bar bar-present ${isHovered ? 'bar-hovered' : ''}`}
+                          style={{
+                            height: `${presentHeight}px`,
+                            animationDelay: `${index * 0.1}s`,
+                            bottom: `${absentHeight}px`
+                          }}
+                          title={`Present: ${day.present}`}
+                        >
+                          {isHovered && presentHeight > 15 && (
+                            <div className="bar-value">{day.present}</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* X-Axis Label */}

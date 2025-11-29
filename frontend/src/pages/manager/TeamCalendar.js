@@ -109,24 +109,24 @@ const TeamCalendar = () => {
           <div className="card-body">
             <div className="calendar-controls">
               <div className="control-group">
-                <label>
-                  Month:
+              <label>
+                Month:
                   <select value={month} onChange={handleMonthChange} className="select-control">
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                       <option key={m} value={m}>
                         {new Date(2000, m - 1).toLocaleString('default', { month: 'long' })}
                       </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Year:
+                  ))}
+                </select>
+              </label>
+              <label>
+                Year:
                   <select value={year} onChange={handleYearChange} className="select-control">
-                    {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i).map(y => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                </label>
+                  {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i).map(y => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </label>
               </div>
             </div>
             
@@ -177,13 +177,13 @@ const TeamCalendar = () => {
               </div>
             ) : (
               <div className="records-list">
-                {selectedRecords.map((record) => (
+                    {selectedRecords.map((record) => (
                   <div key={record._id} className="record-item">
                     <div className="record-header">
                       <div className="record-name">{record.userId.name}</div>
-                      <span className={`status-badge ${record.status}`}>
-                        {record.status}
-                      </span>
+                          <span className={`status-badge ${record.status}`}>
+                            {record.status}
+                          </span>
                     </div>
                     <div className="record-details">
                       <div className="record-info">
