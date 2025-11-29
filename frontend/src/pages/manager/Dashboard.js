@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import AdvancedChart from '../../components/AdvancedChart';
+import PieChart from '../../components/PieChart';
 import '../Dashboard.css';
 import '../../components/Card.css';
 import './ManagerDashboard.css';
@@ -90,7 +91,22 @@ const ManagerDashboard = () => {
               <div className="kpi-label">Present Today</div>
             </div>
           </div>
-          <div className="kpi-card kpi-absent">
+          <div 
+            className="kpi-card kpi-absent clickable"
+            onClick={() => {
+              const absentSection = document.getElementById('absent-employees-section');
+              if (absentSection) {
+                absentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Add a highlight effect
+                absentSection.style.transition = 'box-shadow 0.3s ease';
+                absentSection.style.boxShadow = '0 0 0 4px rgba(239, 68, 68, 0.3)';
+                setTimeout(() => {
+                  absentSection.style.boxShadow = '';
+                }, 2000);
+              }
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="kpi-icon">
               <XIcon />
             </div>
@@ -143,31 +159,19 @@ const ManagerDashboard = () => {
                 </div>
               ) : (
                 <div className="department-chart">
-                  <div className="department-bars">
-                    {Object.entries(departmentStats).map(([dept, stats]) => {
-                      const total = stats.present + stats.late + stats.absent;
-                      const presentPercent = total > 0 ? (stats.present / total) * 100 : 0;
-                      return (
-                        <div key={dept} className="department-bar-item">
-                          <div className="dept-bar-header">
-                            <span className="dept-name">{dept}</span>
-                            <span className="dept-percent">{presentPercent.toFixed(1)}%</span>
-                          </div>
-                          <div className="dept-bar-container">
-                            <div 
-                              className="dept-bar-fill" 
-                              style={{ width: `${presentPercent}%` }}
-                            ></div>
-                          </div>
-                          <div className="dept-bar-stats">
-                            <span className="stat-present">Present: {stats.present}</span>
-                            <span className="stat-late">Late: {stats.late}</span>
-                            <span className="stat-absent">Absent: {stats.absent}</span>
-                          </div>
-                        </div>
-                      );
+                  <PieChart
+                    data={Object.entries(departmentStats).map(([dept, stats]) => {
+                      return {
+                        label: dept,
+                        value: stats.present, // Use present count for pie chart
+                        present: stats.present,
+                        late: stats.late,
+                        absent: stats.absent,
+                        total: stats.present + stats.late + stats.absent
+                      };
                     })}
-                  </div>
+                    colors={['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a']}
+                  />
                 </div>
               )}
             </div>
@@ -185,7 +189,7 @@ const ManagerDashboard = () => {
         </div>
         <div className="alerts-grid">
           {/* Absent Employees Today */}
-          <div className="alert-card absent-alert">
+          <div id="absent-employees-section" className="alert-card absent-alert">
             <div className="alert-header">
               <h3 className="alert-title">❌ Absent Employees Today</h3>
               <span className="alert-count">{absentToday.length}</span>

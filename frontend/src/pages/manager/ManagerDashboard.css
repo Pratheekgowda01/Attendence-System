@@ -34,6 +34,15 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
+.kpi-card.clickable {
+  cursor: pointer;
+}
+
+.kpi-card.clickable:active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
 .kpi-card.kpi-total {
   border-color: rgba(102, 126, 234, 0.2);
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
@@ -109,15 +118,24 @@
 .chart-card {
   background: white;
   border-radius: 16px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 2px solid #f3f4f6;
 }
 
+.chart-card.department-breakdown {
+  padding: 1.25rem;
+}
+
 .chart-header {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
   border-bottom: 2px solid #f3f4f6;
+}
+
+.chart-card.department-breakdown .chart-header {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
 }
 
 .chart-title {
@@ -136,7 +154,7 @@
 }
 
 .chart-body {
-  min-height: 300px;
+  min-height: auto;
 }
 
 .department-chart {

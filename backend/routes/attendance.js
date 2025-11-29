@@ -30,23 +30,23 @@ router.post('/checkin', auth, async (req, res) => {
       return res.status(400).json({ message: 'Already checked in today' });
     }
 
-    // Check-in time period: 9:00 AM to 6:00 PM
+    // Check-in time period: 8:00 AM to 10:00 AM
     const checkInHour = now.getHours();
     const checkInMinute = now.getMinutes();
     const currentTimeMinutes = checkInHour * 60 + checkInMinute;
-    const startTimeMinutes = 9 * 60; // 9:00 AM
-    const endTimeMinutes = 18 * 60; // 6:00 PM (18:00)
+    const startTimeMinutes = 8 * 60; // 8:00 AM
+    const endTimeMinutes = 10 * 60; // 10:00 AM
 
     // Check if within check-in time period
     if (currentTimeMinutes < startTimeMinutes) {
       return res.status(400).json({ 
-        message: `Check-in is only allowed between 9:00 AM and 6:00 PM. Current time: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` 
+        message: `Check-in is only allowed between 8:00 AM and 10:00 AM. Current time: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` 
       });
     }
 
     if (currentTimeMinutes > endTimeMinutes) {
       return res.status(400).json({ 
-        message: `Check-in is only allowed between 9:00 AM and 6:00 PM. Current time: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` 
+        message: `Check-in is only allowed between 8:00 AM and 10:00 AM. Current time: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` 
       });
     }
 

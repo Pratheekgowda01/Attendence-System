@@ -92,7 +92,7 @@ const Layout = () => {
       <aside className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
           <Logo size="small" />
-          <h2 className="sidebar-title">Attendance System</h2>
+          <h2 className="sidebar-title">Attend Pro</h2>
         </div>
 
         <nav className="sidebar-nav">

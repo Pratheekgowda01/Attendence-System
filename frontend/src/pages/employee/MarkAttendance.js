@@ -195,7 +195,7 @@ const MarkAttendance = () => {
                 minute: '2-digit',
                 second: '2-digit'
               })}
-            </div>
+        </div>
             <div className="clock-date">
               {currentTime.toLocaleDateString('en-US', {
                 weekday: 'long',
@@ -264,32 +264,32 @@ const MarkAttendance = () => {
               <div className="detail-row-item">
                 <div className="detail-row-label">Status:</div>
                 <div className="detail-row-value">
-                  <span className={`status-badge ${todayStatus?.attendance?.status || 'absent'}`}>
-                    {(todayStatus?.attendance?.status || 'absent').toUpperCase()}
-                  </span>
-                </div>
+              <span className={`status-badge ${todayStatus?.attendance?.status || 'absent'}`}>
+                {(todayStatus?.attendance?.status || 'absent').toUpperCase()}
+              </span>
+            </div>
               </div>
-              {todayStatus?.attendance?.totalHours && (
+            {todayStatus?.attendance?.totalHours && (
                 <div className="detail-row-item">
                   <div className="detail-row-label">Total Hours:</div>
                   <div className="detail-row-value has-value">
                     {todayStatus.attendance.totalHours.toFixed(2)}h
                   </div>
-                </div>
-              )}
+              </div>
+            )}
             </div>
           </div>
-        </div>
+          </div>
 
         {/* Action Buttons */}
         <div className="action-section">
-          {!todayStatus?.checkedIn && (
-            <button
-              onClick={handleCheckIn}
+            {!todayStatus?.checkedIn && (
+              <button
+                onClick={handleCheckIn}
               disabled={actionLoading || !canCheckIn}
               className={`action-btn checkin-btn ${!canCheckIn ? 'disabled' : ''}`}
               title={!canCheckIn ? 'Check-in is only allowed between 9:00 AM and 6:00 PM' : ''}
-            >
+              >
               {actionLoading ? (
                 <>
                   <svg className="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -305,14 +305,14 @@ const MarkAttendance = () => {
                   Check In
                 </>
               )}
-            </button>
-          )}
-          {todayStatus?.checkedIn && !todayStatus?.checkedOut && (
-            <button
-              onClick={handleCheckOut}
-              disabled={actionLoading}
+              </button>
+            )}
+            {todayStatus?.checkedIn && !todayStatus?.checkedOut && (
+              <button
+                onClick={handleCheckOut}
+                disabled={actionLoading}
               className="action-btn checkout-btn"
-            >
+              >
               {actionLoading ? (
                 <>
                   <svg className="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -329,9 +329,9 @@ const MarkAttendance = () => {
                   Check Out
                 </>
               )}
-            </button>
-          )}
-          {todayStatus?.checkedOut && (
+              </button>
+            )}
+            {todayStatus?.checkedOut && (
             <div className="completed-message">
               <div className="completed-icon">
                 <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -345,10 +345,10 @@ const MarkAttendance = () => {
                 onClick={() => navigate('/employee/dashboard')} 
                 className="btn btn-secondary"
               >
-                Go to Dashboard
-              </button>
-            </div>
-          )}
+                  Go to Dashboard
+                </button>
+              </div>
+            )}
         </div>
       </div>
     </div>
