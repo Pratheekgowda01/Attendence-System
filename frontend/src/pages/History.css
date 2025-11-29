@@ -1,0 +1,63 @@
+.attendance-calendar {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+}
+
+.attendance-calendar .react-calendar__tile {
+  height: 60px;
+  border-radius: 4px;
+}
+
+.attendance-calendar .react-calendar__tile.calendar-day.present {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.attendance-calendar .react-calendar__tile.calendar-day.absent {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.attendance-calendar .react-calendar__tile.calendar-day.late {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.attendance-calendar .react-calendar__tile.calendar-day.half-day {
+  background: #fed7aa;
+  color: #9a3412;
+}
+
+.attendance-calendar .react-calendar__tile:enabled:hover,
+.attendance-calendar .react-calendar__tile:enabled:focus {
+  background: #e0e7ff;
+}
+
+.legend-item {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.legend-item.present {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.legend-item.absent {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.legend-item.late {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.legend-item.half-day {
+  background: #fed7aa;
+  color: #9a3412;
+}
+

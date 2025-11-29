@@ -1,0 +1,159 @@
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-title {
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar {
+  text-align: center;
+  padding: 2rem 0;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 2rem;
+}
+
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.profile-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.profile-role {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.profile-details {
+  padding: 1rem 0;
+}
+
+.detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.detail-item:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateX(5px);
+}
+
+.detail-icon {
+  font-size: 2rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.detail-content {
+  flex: 1;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.detail-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .avatar-circle {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+
+  .profile-name {
+    font-size: 1.5rem;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .detail-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+}
+

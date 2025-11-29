@@ -1,0 +1,172 @@
+.mark-attendance-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-title {
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.attendance-card {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.date-display {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.live-clock {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.clock-time {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.clock-date {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.time-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 2px solid;
+}
+
+.time-status.allowed {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.time-status.not-allowed {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+.time-status-icon {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.time-status-text {
+  flex: 1;
+}
+
+.time-status-text strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.time-status-text p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.attendance-details {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.detail-value {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 1.05rem;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.completed-message {
+  text-align: center;
+  padding: 2rem;
+}
+
+.completed-icon {
+  font-size: 4rem;
+  color: #10b981;
+  margin-bottom: 1rem;
+}
+
+.completed-message p {
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .mark-attendance-container {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .clock-time {
+    font-size: 2rem;
+  }
+
+  .time-status {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
