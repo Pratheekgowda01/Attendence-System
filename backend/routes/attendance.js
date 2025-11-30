@@ -30,42 +30,39 @@ router.post('/checkin', auth, async (req, res) => {
       return res.status(400).json({ message: 'Already checked in today' });
     }
 
-    // Check-in time period: 8:00 AM to 10:00 AM
+    // Check if it's late (after 9:30 AM)
     const checkInHour = now.getHours();
     const checkInMinute = now.getMinutes();
-    const currentTimeMinutes = checkInHour * 60 + checkInMinute;
-    const startTimeMinutes = 8 * 60; // 8:00 AM
-    const endTimeMinutes = 10 * 60; // 10:00 AM
-
-    // Check if within check-in time period
-    if (currentTimeMinutes < startTimeMinutes) {
-      return res.status(400).json({ 
-        message: `Check-in is only allowed between 8:00 AM and 10:00 AM. Current time: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` 
-      });
-    }
-
-    if (currentTimeMinutes > endTimeMinutes) {
-      return res.status(400).json({ 
-        message: `Check-in is only allowed between 8:00 AM and 10:00 AM. Current time: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}` 
-      });
-    }
-
-    // Check if it's late (after 9:30 AM)
     const isLate = checkInHour > 9 || (checkInHour === 9 && checkInMinute > 30);
+    const status = isLate ? 'late' : 'present';
+
+    console.log('Check-in:', {
+      time: now.toISOString(),
+      hour: checkInHour,
+      minute: checkInMinute,
+      isLate,
+      status
+    });
 
     if (attendance) {
       attendance.checkInTime = now;
-      attendance.status = isLate ? 'late' : 'present';
+      attendance.status = status;
     } else {
       attendance = new Attendance({
         userId: req.user._id,
         date: today,
         checkInTime: now,
-        status: isLate ? 'late' : 'present'
+        status: status
       });
     }
 
     await attendance.save();
+
+    console.log('Saved attendance:', {
+      id: attendance._id,
+      status: attendance.status,
+      checkInTime: attendance.checkInTime
+    });
 
     res.json({
       message: 'Checked in successfully',
@@ -101,6 +98,13 @@ router.post('/checkout', auth, async (req, res) => {
       return res.status(400).json({ message: 'Already checked out today' });
     }
 
+    console.log('Check-out - Before:', {
+      id: attendance._id,
+      status: attendance.status,
+      checkInTime: attendance.checkInTime,
+      checkOutTime: attendance.checkOutTime
+    });
+
     attendance.checkOutTime = now;
 
     // Calculate total hours
@@ -108,12 +112,39 @@ router.post('/checkout', auth, async (req, res) => {
     const diffHours = diffMs / (1000 * 60 * 60);
     attendance.totalHours = Math.round(diffHours * 100) / 100;
 
-    // If less than 4 hours, mark as half-day
-    if (attendance.totalHours < 4) {
+    console.log('Check-out - Calculation:', {
+      checkInTime: attendance.checkInTime,
+      checkOutTime: attendance.checkOutTime,
+      diffMs,
+      diffHours,
+      totalHours: attendance.totalHours,
+      currentStatus: attendance.status
+    });
+
+    // Only set to half-day if not already present/late and worked less than 4 hours
+    const shouldSetHalfDay = attendance.totalHours < 4 && attendance.status !== 'present' && attendance.status !== 'late';
+    console.log('Should set half-day?', shouldSetHalfDay, {
+      totalHours: attendance.totalHours,
+      currentStatus: attendance.status,
+      condition1: attendance.totalHours < 4,
+      condition2: attendance.status !== 'present',
+      condition3: attendance.status !== 'late'
+    });
+
+    if (shouldSetHalfDay) {
+      console.log('Setting status to half-day');
       attendance.status = 'half-day';
+    } else {
+      console.log('Keeping current status:', attendance.status);
     }
 
     await attendance.save();
+
+    console.log('Check-out - After save:', {
+      id: attendance._id,
+      status: attendance.status,
+      totalHours: attendance.totalHours
+    });
 
     res.json({
       message: 'Checked out successfully',

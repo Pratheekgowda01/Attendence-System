@@ -11,6 +11,29 @@
   gap: 2rem;
 }
 
+/* Welcome Header */
+.welcome-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.welcome-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -1px;
+  font-family: 'Montserrat', sans-serif;
+  color: #1f2937;
+}
+
+.welcome-header p {
+  font-size: 1.125rem;
+  margin: 0;
+  color: #6b7280;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+}
+
 /* I. Quick Action Header */
 .quick-action-header {
   margin-bottom: 1rem;
@@ -170,7 +193,7 @@
 
 .summary-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem;
 }
 
@@ -202,6 +225,11 @@
 }
 
 .summary-card.stat-late {
+  border-color: rgba(245, 158, 11, 0.2);
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.summary-card.stat-halfday {
   border-color: rgba(245, 158, 11, 0.2);
   background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
 }

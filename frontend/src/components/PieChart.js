@@ -176,9 +176,9 @@ const PieChart = ({ data, colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', 
             <div className="legend-content">
               <div className="legend-name">{item.label}</div>
               <div className="legend-stats">
-                <span className="stat-present">Present: {item.present || 0}</span>
-                <span className="stat-late">Late: {item.late || 0}</span>
-                <span className="stat-absent">Absent: {item.absent || 0}</span>
+                <span className="stat-present">○ {item.present || 0}</span>
+                <span className="stat-late">◐ {item.late || 0}</span>
+                <span className="stat-absent">□ {item.absent || 0}</span>
               </div>
             </div>
             <div className="legend-percentage">{item.percentage.toFixed(1)}%</div>

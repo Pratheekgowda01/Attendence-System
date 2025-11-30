@@ -179,6 +179,12 @@ const EmployeeDashboard = () => {
 
   return (
     <div className="dashboard employee-dashboard">
+      {/* Welcome Header */}
+      <div className="welcome-header">
+        <h1>Hi, {user?.name || 'Employee'}!</h1>
+        <p>Welcome back to your attendance dashboard</p>
+      </div>
+
       {/* I. Quick Action Header */}
       <div className="quick-action-header">
         <div className="status-display-card">
@@ -263,6 +269,15 @@ const EmployeeDashboard = () => {
             <div className="stat-content">
               <div className="stat-number">{monthlySummary.late}</div>
               <div className="stat-label">Late</div>
+            </div>
+          </div>
+          <div className="summary-card stat-halfday">
+            <div className="stat-icon-large">
+              <ClockIcon />
+            </div>
+            <div className="stat-content">
+              <div className="stat-number">{monthlySummary.halfDay || 0}</div>
+              <div className="stat-label">Half Day</div>
             </div>
           </div>
           <div className="summary-card stat-hours">

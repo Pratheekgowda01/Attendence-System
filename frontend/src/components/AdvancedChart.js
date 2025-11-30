@@ -5,7 +5,7 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, data: null });
 
-  const maxValue = Math.max(...data.map(d => d.present + d.absent), totalEmployees || 5);
+  const maxValue = Math.max(...data.map(d => d.present + d.late + d.halfDay + d.absent), totalEmployees || 5);
   const chartHeight = 280;
   const chartPadding = { top: 40, bottom: 60, left: 50, right: 50 };
 
@@ -63,8 +63,9 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
           <div className="bars-container">
             {data.map((day, index) => {
               const presentHeight = (day.present / maxValue) * (chartHeight - chartPadding.top - chartPadding.bottom);
+              const lateHeight = (day.late / maxValue) * (chartHeight - chartPadding.top - chartPadding.bottom);
+              const halfDayHeight = (day.halfDay / maxValue) * (chartHeight - chartPadding.top - chartPadding.bottom);
               const absentHeight = (day.absent / maxValue) * (chartHeight - chartPadding.top - chartPadding.bottom);
-              const totalHeight = presentHeight + absentHeight;
               const isHovered = hoveredIndex === index;
 
               return (
@@ -81,7 +82,7 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
                       height: `${chartHeight - chartPadding.top - chartPadding.bottom}px`
                     }}
                   >
-                    {/* Stacked Bar - Absent at bottom, Present on top */}
+                    {/* Stacked Bar - Absent at bottom, Late in middle, Present on top */}
                     <div className="stacked-bar-container">
                       {/* Absent Bar (Bottom) */}
                       {absentHeight > 0 && (
@@ -89,7 +90,7 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
                           className={`bar bar-absent ${isHovered ? 'bar-hovered' : ''}`}
                           style={{
                             height: `${absentHeight}px`,
-                            animationDelay: `${index * 0.1 + 0.05}s`,
+                            animationDelay: `${index * 0.8 + 0.5}s`,
                             bottom: 0
                           }}
                           title={`Absent: ${day.absent}`}
@@ -99,15 +100,49 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
                           )}
                         </div>
                       )}
-                      
+
+                      {/* Late Bar (Bottom-Middle) */}
+                      {lateHeight > 0 && (
+                        <div
+                          className={`bar bar-late ${isHovered ? 'bar-hovered' : ''}`}
+                          style={{
+                            height: `${lateHeight}px`,
+                            animationDelay: `${index * 0.8 + 1.3}s`,
+                            bottom: `${absentHeight}px`
+                          }}
+                          title={`Late: ${day.late}`}
+                        >
+                          {isHovered && lateHeight > 15 && (
+                            <div className="bar-value">{day.late}</div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Half Day Bar (Middle) */}
+                      {halfDayHeight > 0 && (
+                        <div
+                          className={`bar bar-half-day ${isHovered ? 'bar-hovered' : ''}`}
+                          style={{
+                            height: `${halfDayHeight}px`,
+                            animationDelay: `${index * 0.8 + 1.7}s`,
+                            bottom: `${absentHeight + lateHeight}px`
+                          }}
+                          title={`Half Day: ${day.halfDay}`}
+                        >
+                          {isHovered && halfDayHeight > 15 && (
+                            <div className="bar-value">{day.halfDay}</div>
+                          )}
+                        </div>
+                      )}
+
                       {/* Present Bar (Top) */}
                       {presentHeight > 0 && (
                         <div
                           className={`bar bar-present ${isHovered ? 'bar-hovered' : ''}`}
                           style={{
                             height: `${presentHeight}px`,
-                            animationDelay: `${index * 0.1}s`,
-                            bottom: `${absentHeight}px`
+                            animationDelay: `${index * 0.8 + 2.1}s`,
+                            bottom: `${absentHeight + lateHeight + halfDayHeight}px`
                           }}
                           title={`Present: ${day.present}`}
                         >
@@ -126,8 +161,7 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
                     </span>
                     {isHovered && (
                       <div className="x-axis-detail">
-                        <div>Present: {day.present}</div>
-                        <div>Absent: {day.absent}</div>
+                        <div>Total: {day.present + day.late + day.halfDay + day.absent}</div>
                       </div>
                     )}
                   </div>
@@ -143,6 +177,14 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
         <div className="legend-item">
           <div className="legend-indicator legend-present"></div>
           <span className="legend-text">Present</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-indicator legend-late"></div>
+          <span className="legend-text">Late</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-indicator legend-half-day"></div>
+          <span className="legend-text">Half Day</span>
         </div>
         <div className="legend-item">
           <div className="legend-indicator legend-absent"></div>
@@ -172,12 +214,20 @@ const AdvancedChart = ({ data, totalEmployees, title = "Weekly Attendance Trend"
               <span className="tooltip-value">{tooltip.data.present}</span>
             </div>
             <div className="tooltip-item">
+              <span className="tooltip-label">Late:</span>
+              <span className="tooltip-value">{tooltip.data.late}</span>
+            </div>
+            <div className="tooltip-item">
+              <span className="tooltip-label">Half Day:</span>
+              <span className="tooltip-value">{tooltip.data.halfDay}</span>
+            </div>
+            <div className="tooltip-item">
               <span className="tooltip-label">Absent:</span>
               <span className="tooltip-value">{tooltip.data.absent}</span>
             </div>
             <div className="tooltip-item">
               <span className="tooltip-label">Total:</span>
-              <span className="tooltip-value">{tooltip.data.present + tooltip.data.absent}</span>
+              <span className="tooltip-value">{tooltip.data.present + tooltip.data.late + tooltip.data.halfDay + tooltip.data.absent}</span>
             </div>
           </div>
         </div>

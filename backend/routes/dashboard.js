@@ -40,13 +40,20 @@ router.get('/employee', auth, async (req, res) => {
       present: 0,
       absent: 0,
       late: 0,
+      halfDay: 0,
       totalHours: 0
     };
 
     monthlyAttendance.forEach(record => {
-      if (record.status === 'present') summary.present++;
-      else if (record.status === 'absent') summary.absent++;
-      else if (record.status === 'late') summary.late++;
+      if (record.status === 'present') {
+        summary.present++;
+      } else if (record.status === 'late') {
+        summary.late++;
+      } else if (record.status === 'half-day') {
+        summary.halfDay++;
+      } else if (record.status === 'absent') {
+        summary.absent++;
+      }
       summary.totalHours += record.totalHours || 0;
     });
 
@@ -98,6 +105,7 @@ router.get('/manager', auth, isManager, async (req, res) => {
       present: 0,
       absent: 0,
       late: [],
+      halfDay: [],
       checkedIn: [],
       checkedOut: []
     };
@@ -114,6 +122,9 @@ router.get('/manager', auth, isManager, async (req, res) => {
         if (record.status === 'present') todayStats.present++;
         if (record.status === 'late') {
           todayStats.late.push(record);
+        }
+        if (record.status === 'half-day') {
+          todayStats.halfDay.push(record);
         }
         if (record.checkInTime) todayStats.checkedIn.push(record);
         if (record.checkOutTime) todayStats.checkedOut.push(record);
@@ -136,15 +147,22 @@ router.get('/manager', auth, isManager, async (req, res) => {
       const date = new Date();
       date.setDate(date.getDate() - i);
       const dateStr = normalizeDate(date);
-      
-      const dayAttendance = weeklyAttendance.filter(a => 
+
+      const dayAttendance = weeklyAttendance.filter(a =>
         normalizeDate(a.date).getTime() === dateStr.getTime()
       );
-      
+
+      const presentCount = dayAttendance.filter(a => a.status === 'present').length;
+      const lateCount = dayAttendance.filter(a => a.status === 'late').length;
+      const halfDayCount = dayAttendance.filter(a => a.status === 'half-day').length;
+      const totalPresent = presentCount + lateCount + halfDayCount;
+
       weeklyTrend.push({
         date: dateStr.toISOString().split('T')[0],
-        present: dayAttendance.filter(a => a.status === 'present' || a.status === 'late').length,
-        absent: totalEmployees - dayAttendance.filter(a => a.status === 'present' || a.status === 'late').length
+        present: presentCount,
+        late: lateCount,
+        halfDay: halfDayCount,
+        absent: totalEmployees - totalPresent
       });
     }
 

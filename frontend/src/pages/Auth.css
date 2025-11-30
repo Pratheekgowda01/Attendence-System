@@ -5,7 +5,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background:
+    linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 50%, rgba(240, 147, 251, 0.9) 100%),
+    url('https://media.giphy.com/media/SWoSkN6DxTszqIKEqv/giphy.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   padding: 2rem;
   position: relative;
   overflow: hidden;
@@ -39,6 +45,83 @@
   z-index: 0;
 }
 
+/* Hero Section */
+.auth-hero {
+  flex: 1;
+  max-width: 500px;
+  color: white;
+  z-index: 1;
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.hero-content {
+  text-align: left;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  font-family: 'Inter', sans-serif;
+}
+
+.hero-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+.hero-gif {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.gif-placeholder {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gif-placeholder span {
+  font-size: 4rem;
+  animation: bounce 2s infinite;
+}
+
+.gif-placeholder p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  opacity: 0.9;
+}
+
 .auth-card {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
@@ -46,13 +129,13 @@
   padding: 3rem 2.5rem;
   width: 100%;
   max-width: 480px;
-  box-shadow: 
+  box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
   z-index: 1;
-  animation: fadeIn 0.8s ease-out;
+  animation: fadeIn 0.8s ease-out 0.2s both;
 }
 
 /* AttendPro Logo */
@@ -211,6 +294,63 @@
   }
 }
 
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .auth-container {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .auth-hero {
+    max-width: 100%;
+    text-align: center;
+    order: 2; /* Show hero content below login on mobile */
+  }
+
+  .auth-card {
+    order: 1; /* Show login card first on mobile */
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-features {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .feature-item {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 640px) {
   .auth-card {
     padding: 2rem 1.5rem;
@@ -229,5 +369,34 @@
     width: 40px;
     height: 40px;
     font-size: 1.25rem;
+  }
+
+  .auth-hero {
+    margin-bottom: 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+
+  .hero-features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-gif {
+    margin-top: 2rem;
+  }
+
+  .gif-placeholder {
+    padding: 1.5rem;
+  }
+
+  .gif-placeholder span {
+    font-size: 3rem;
   }
 }
