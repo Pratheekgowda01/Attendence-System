@@ -97,9 +97,26 @@ The app will open in your browser at `http://localhost:3000`
 
 ## Screenshots
 
-*Add screenshots of your application here:*
-- Login Page
-- Employee Dashboard
-- Manager Dashboard
-- Attendance Calendar View
-- Reports Page
+### Login Page
+![Login Page](screenshots/login.png)
+
+### Employee Dashboard
+![Employee Dashboard](screenshots/employee-dashboard.png)
+
+### Manager Dashboard
+![Manager Dashboard](screenshots/manager-dashboard.png)
+
+### Attendance Calendar View
+![Attendance Calendar View](screenshots/attendance-calendar.png)
+
+### Reports Page
+![Reports Page](screenshots/reports.png)
+
+### Additional Screenshots
+![Screenshot 1](screenshots/screenshot1.png)
+![Screenshot 2](screenshots/screenshot2.png)
+![Screenshot 3](screenshots/screenshot3.png)
+![Screenshot 4](screenshots/screenshot4.png)
+![Screenshot 5](screenshots/screenshot5.png)
+![Screenshot 6](screenshots/screenshot6.png)
+![Screenshot 7](screenshots/screenshot7.png)
