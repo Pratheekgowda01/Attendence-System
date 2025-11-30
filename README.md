@@ -1,3 +1,11 @@
+#Name : Pratheek K Gowda
+#College : Adichunchanagiri Institute of Technology , Chikkamagaluru
+#Contact No : 9686090062
+#G mail : pratheekgowda53@gmail.com
+
+
+
+
 # Employee Attendance System
 
 ## Setup Instructions
